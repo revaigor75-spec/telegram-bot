@@ -144,11 +144,4 @@ async def main():
 
     await client.run_until_disconnected()
 
-while True:
-
-    try:
-        asyncio.run(main())
-
-    except Exception as e:
-
-        print("RECONNECT:", e)
+asyncio.run(main())
