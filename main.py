@@ -8,8 +8,8 @@ import asyncio
 # TELEGRAM API
 # =========================
 
-api_id = int(os.getenv(38572833))
-api_hash = os.getenv(f4e6a33ec52ba76cac20c1deefd37a26)
+api_id = int(os.getenv("38572833"))
+api_hash = os.getenv("f4e6a33ec52ba76cac20c1deefd37a26")
 
 # SESSION STRING из Railway Variables
 SESSION = os.getenv("SESSION")
