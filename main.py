@@ -1,4 +1,5 @@
-from telethon import TelegramClient, events
+
+# =========================from telethon import TelegramClient, events
 from telethon.sessions import StringSession
 import os
 import re
@@ -14,7 +15,6 @@ api_hash = os.getenv("API_HASH")
 # SESSION STRING из Railway Variables
 SESSION = os.getenv("SESSION")
 
-# =========================
 # ID
 # =========================
 
