@@ -7,6 +7,7 @@ API_ID = int(os.getenv("API_ID"))
 API_HASH = os.getenv("API_HASH")
 SESSION = os.getenv("SESSION")
 
+SOURCE_CHAT_ID = -1002155298579
 TARGET_CHANNEL = -1003900818213
 
 client = TelegramClient(
@@ -18,7 +19,7 @@ client = TelegramClient(
 print("БОТ ЗАПУСКАЕТСЯ...")
 
 
-@client.on(events.NewMessage)
+@client.on(events.(chats=SOURCE_CHAT_ID))
 async def handler(event):
     try:
         text = event.raw_text
