@@ -1,5 +1,7 @@
 from telethon import TelegramClient, events
 from telethon.sessions import StringSession
+from telethon.errors import PersistentTimestampOutdatedError
+
 import os
 import re
 
@@ -35,10 +37,13 @@ async def handler(event):
 
         if "rare" in text_lower:
             duck_type = "🟢 RARE"
+
         elif "epic" in text_lower:
             duck_type = "🟣 EPIC"
+
         elif "legendary" in text_lower:
             duck_type = "🟡 LEGENDARY"
+
         elif "unique" in text_lower:
             duck_type = "🔴 UNIQUE"
 
@@ -48,6 +53,7 @@ async def handler(event):
         links = re.findall(r'(https?://\S+|t\.me/\S+)', text)
 
         if not links:
+            print("ССЫЛКА НЕ НАЙДЕНА")
             return
 
         link = links[0]
@@ -59,10 +65,12 @@ async def handler(event):
             msg
         )
 
-        print("ОТПРАВЛЕНО")
+        print("ОТПРАВЛЕНО В КАНАЛ")
+
+    except PersistentTimestampOutdatedError:
+        print("Telegram временно лагает")
 
     except Exception as e:
-        print("ERROR:", e)
         print("ERROR:", e)
 
 
