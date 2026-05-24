@@ -21,11 +21,10 @@ print("БОТ ЗАПУСКАЕТСЯ...")
 
 @client.on(events.NewMessage(chats=SOURCE_CHAT_ID))
 async def handler(event):
+    try:
         text = event.raw_text
 
-        print("СООБЩЕНИЕ ПОЛУЧЕНО")
-        print("CHAT ID:", event.chat_id)
-        print("TEXT:", text)
+        print("СООБЩЕНИЕ:", text)
 
         if not text:
             return
@@ -44,13 +43,11 @@ async def handler(event):
             duck_type = "🔴 UNIQUE"
 
         if not duck_type:
-            print("КЛЮЧ НЕ НАЙДЕН")
             return
 
         links = re.findall(r'(https?://\S+|t\.me/\S+)', text)
 
         if not links:
-            print("ССЫЛКА НЕ НАЙДЕНА")
             return
 
         link = links[0]
@@ -62,9 +59,10 @@ async def handler(event):
             msg
         )
 
-        print("ОТПРАВЛЕНО В КАНАЛ")
+        print("ОТПРАВЛЕНО")
 
     except Exception as e:
+        print("ERROR:", e)
         print("ERROR:", e)
 
 
