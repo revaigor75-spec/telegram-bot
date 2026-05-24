@@ -1,14 +1,10 @@
 from telethon import TelegramClient, events
 from telethon.sessions import StringSession
 import os
-import re
 
 API_ID = int(os.getenv("API_ID"))
 API_HASH = os.getenv("API_HASH")
 SESSION = os.getenv("SESSION")
-
-SOURCE_CHAT_ID = -1002155298579
-TARGET_CHANNEL = -1003900818213
 
 client = TelegramClient(
     StringSession(SESSION),
@@ -16,17 +12,14 @@ client = TelegramClient(
     API_HASH
 )
 
-print("USERBOT успешно запущен")
-
-
-@client.on(events.NewMessage)
+@client.on(events.NewMessage(incoming=True))
 async def handler(event):
-    try:
-        text = event.raw_text
+    print("СООБЩЕНИЕ ПРИШЛО")
+    print("CHAT:", event.chat_id)
+    print("TEXT:", event.raw_text)
 
-        print("СООБЩЕНИЕ ПОЛУЧЕНО")
-        print("CHAT ID:", event.chat_id)
-        print("TEXT:", text)
+client.start()
 
-    except Exception as e:
-        print("ERROR:", e)
+print("БОТ ЗАПУЩЕН")
+
+client.run_until_disconnected()
