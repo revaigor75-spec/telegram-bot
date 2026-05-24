@@ -19,12 +19,13 @@ client = TelegramClient(
 print("USERBOT успешно запущен")
 
 
-@client.on(events.NewMessage(chats=SOURCE_CHAT_ID))
+@client.on(events.NewMessage)
 async def handler(event):
     try:
         text = event.raw_text
 
-        print("НОВОЕ СООБЩЕНИЕ:", text)
+        print("CHAT:", event.chat_id)
+        print("TEXT:", text)
 
         if not text:
             return
@@ -45,28 +46,22 @@ async def handler(event):
         if not duck_type:
             return
 
-        links = re.findall(r'(https?://\\S+|t\\.me/\\S+)', text)
+        links = re.findall(r'(https?://\S+|t\.me/\S+)', text)
 
         if not links:
+            print("ССЫЛКИ НЕТ")
             return
 
         link = links[0]
 
-        msg = f"{duck_type}\\n\\n🔗 {link}"
+        msg = f"{duck_type}\n\n🔗 {link}"
 
         await client.send_message(
             TARGET_CHANNEL,
             msg
         )
 
-        print(f"ОТПРАВЛЕНО: {duck_type} | {link}")
+        print("ОТПРАВЛЕНО В КАНАЛ")
 
     except Exception as e:
-        print(f"ERROR: {e}")
-
-
-client.start()
-
-print("DUCK USERBOT ЗАПУЩЕН И РАБОТАЕТ")
-
-client.run_until_disconnected()
+        print("ERROR:", e)
