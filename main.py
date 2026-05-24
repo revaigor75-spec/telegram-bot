@@ -2,45 +2,29 @@ from telethon import TelegramClient, events
 from telethon.sessions import StringSession
 import os
 import re
-import asyncio
 
-# =========================
-# TELEGRAM API
-# =========================
-api_id = int(os.getenv("API_ID"))
-api_hash = os.getenv("API_HASH")
-session_string = os.getenv("SESSION")
+API_ID = int(os.getenv("API_ID"))
+API_HASH = os.getenv("API_HASH")
+SESSION = os.getenv("SESSION")
 
-# =========================
-# ID
-# =========================
 SOURCE_CHAT_ID = -1002155298579
 TARGET_CHANNEL = -1003900818213
 
-# =========================
-# КЛЮЧЕВЫЕ СЛОВА
-# =========================
-KEYWORDS = ["rare", "epic", "legendary", "unique"]
-
-# =========================
-# CLIENT
-# =========================
 client = TelegramClient(
-    StringSession(session_string),
-    api_id,
-    api_hash,
-    auto_reconnect=True,
-    retry_delay=5,
-    connection_retries=None
+    StringSession(SESSION),
+    API_ID,
+    API_HASH
 )
 
-# =========================
-# ОБРАБОТКА СООБЩЕНИЙ
-# =========================
+print("USERBOT успешно запущен")
+
+
 @client.on(events.NewMessage(chats=SOURCE_CHAT_ID))
 async def handler(event):
     try:
         text = event.raw_text
+
+        print("НОВОЕ СООБЩЕНИЕ:", text)
 
         if not text:
             return
@@ -61,16 +45,14 @@ async def handler(event):
         if not duck_type:
             return
 
-        # Ищем ссылку
-        links = re.findall(r'(https?://\S+|t\.me/\S+)', text)
+        links = re.findall(r'(https?://\\S+|t\\.me/\\S+)', text)
 
         if not links:
             return
 
         link = links[0]
 
-        # Сообщение в канал
-        msg = f"{duck_type}\n\n🔗 {link}"
+        msg = f"{duck_type}\\n\\n🔗 {link}"
 
         await client.send_message(
             TARGET_CHANNEL,
@@ -81,3 +63,10 @@ async def handler(event):
 
     except Exception as e:
         print(f"ERROR: {e}")
+
+
+client.start()
+
+print("DUCK USERBOT ЗАПУЩЕН И РАБОТАЕТ")
+
+client.run_until_disconnected()
