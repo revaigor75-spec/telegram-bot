@@ -7,7 +7,6 @@ API_ID = int(os.getenv("API_ID"))
 API_HASH = os.getenv("API_HASH")
 SESSION = os.getenv("SESSION")
 
-SOURCE_CHAT_ID = -1002155298579
 TARGET_CHANNEL = -1003900818213
 
 client = TelegramClient(
@@ -16,7 +15,7 @@ client = TelegramClient(
     API_HASH
 )
 
-print("USERBOT успешно запущен")
+print("БОТ ЗАПУСКАЕТСЯ...")
 
 
 @client.on(events.NewMessage)
@@ -24,7 +23,8 @@ async def handler(event):
     try:
         text = event.raw_text
 
-        print("CHAT:", event.chat_id)
+        print("СООБЩЕНИЕ ПОЛУЧЕНО")
+        print("CHAT ID:", event.chat_id)
         print("TEXT:", text)
 
         if not text:
@@ -44,12 +44,13 @@ async def handler(event):
             duck_type = "🔴 UNIQUE"
 
         if not duck_type:
+            print("КЛЮЧ НЕ НАЙДЕН")
             return
 
         links = re.findall(r'(https?://\S+|t\.me/\S+)', text)
 
         if not links:
-            print("ССЫЛКИ НЕТ")
+            print("ССЫЛКА НЕ НАЙДЕНА")
             return
 
         link = links[0]
@@ -65,3 +66,10 @@ async def handler(event):
 
     except Exception as e:
         print("ERROR:", e)
+
+
+client.start()
+
+print("БОТ ЗАПУЩЕН И РАБОТАЕТ")
+
+client.run_until_disconnected()
