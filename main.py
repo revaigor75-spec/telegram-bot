@@ -19,9 +19,8 @@ client = TelegramClient(
 print("БОТ ЗАПУСКАЕТСЯ...")
 
 
-@client.on(events(chats=SOURCE_CHAT_ID))
+@client.on(events.NewMessage(chats=SOURCE_CHAT_ID))
 async def handler(event):
-    try:
         text = event.raw_text
 
         print("СООБЩЕНИЕ ПОЛУЧЕНО")
