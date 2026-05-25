@@ -65,7 +65,7 @@ async def handler(event):
         elif re.search(r'unique', text_lower):
             duck_type = "🔴 UNIQUE"
 
-        # если нет типа утки — не отправляем
+        # если нет типа утки — пропускаем
         if not duck_type:
             return
 
@@ -83,20 +83,6 @@ async def handler(event):
             return
 
         # =========================
-        # ИЩЕМ УРОВЕНЬ
-        # =========================
-
-        level = None
-
-        level_match = re.search(
-            r'(?:level|lvl|lv|уровень)?\s*[:\-]?\s*([1-4])',
-            text_lower
-        )
-
-        if level_match:
-            level = level_match.group(1)
-
-        # =========================
         # СОБИРАЕМ ССЫЛКИ
         # =========================
 
@@ -106,20 +92,10 @@ async def handler(event):
         # СОБИРАЕМ СООБЩЕНИЕ
         # =========================
 
-        if level:
-
-            msg = (
-                f"{duck_type}\n"
-                f"⭐ LEVEL {level}\n\n"
-                f"🔗 {links_text}"
-            )
-
-        else:
-
-            msg = (
-                f"{duck_type}\n\n"
-                f"🔗 {links_text}"
-            )
+        msg = (
+            f"{duck_type}\n\n"
+            f"🔗 {links_text}"
+        )
 
         # =========================
         # ОТПРАВЛЯЕМ
