@@ -23,8 +23,22 @@ print("БОТ ЗАПУСКАЕТСЯ...")
 
 @client.on(events.NewMessage(chats=SOURCE_CHAT_ID))
 async def handler(event):
+
     try:
-        text = event.raw_text
+
+        # =========================
+        # ПОЛУЧАЕМ ТЕКСТ
+        # =========================
+
+        text = ""
+
+        if event.message.message:
+            text += event.message.message
+
+        if event.message.raw_text:
+            text += "\n" + event.message.raw_text
+
+        text = text.strip()
 
         print("СООБЩЕНИЕ:", text)
 
@@ -33,32 +47,83 @@ async def handler(event):
 
         text_lower = text.lower()
 
+        # =========================
+        # ИЩЕМ ТИП УТКИ
+        # =========================
+
         duck_type = None
 
-        if "rare" in text_lower:
+        if re.search(r'rare', text_lower):
             duck_type = "🟢 RARE"
 
-        elif "epic" in text_lower:
+        elif re.search(r'epic', text_lower):
             duck_type = "🟣 EPIC"
 
-        elif "legendary" in text_lower:
+        elif re.search(r'legendary', text_lower):
             duck_type = "🟡 LEGENDARY"
 
-        elif "unique" in text_lower:
+        elif re.search(r'unique', text_lower):
             duck_type = "🔴 UNIQUE"
 
+        # если нет типа утки — не отправляем
         if not duck_type:
             return
 
-        links = re.findall(r'(https?://\S+|t\.me/\S+)', text)
+        # =========================
+        # ИЩЕМ ВСЕ ССЫЛКИ
+        # =========================
+
+        links = re.findall(
+            r'(https?://[^\s]+|t\.me/[^\s]+)',
+            text
+        )
 
         if not links:
-            print("ССЫЛКА НЕ НАЙДЕНА")
+            print("ССЫЛКИ НЕ НАЙДЕНЫ")
             return
 
-        link = links[0]
+        # =========================
+        # ИЩЕМ УРОВЕНЬ
+        # =========================
 
-        msg = f"{duck_type}\n\n🔗 {link}"
+        level = None
+
+        level_match = re.search(
+            r'(?:level|lvl|lv|уровень)?\s*[:\-]?\s*([1-4])',
+            text_lower
+        )
+
+        if level_match:
+            level = level_match.group(1)
+
+        # =========================
+        # СОБИРАЕМ ССЫЛКИ
+        # =========================
+
+        links_text = "\n".join(links)
+
+        # =========================
+        # СОБИРАЕМ СООБЩЕНИЕ
+        # =========================
+
+        if level:
+
+            msg = (
+                f"{duck_type}\n"
+                f"⭐ LEVEL {level}\n\n"
+                f"🔗 {links_text}"
+            )
+
+        else:
+
+            msg = (
+                f"{duck_type}\n\n"
+                f"🔗 {links_text}"
+            )
+
+        # =========================
+        # ОТПРАВЛЯЕМ
+        # =========================
 
         await client.send_message(
             TARGET_CHANNEL,
@@ -68,9 +133,11 @@ async def handler(event):
         print("ОТПРАВЛЕНО В КАНАЛ")
 
     except PersistentTimestampOutdatedError:
+
         print("Telegram временно лагает")
 
     except Exception as e:
+
         print("ERROR:", e)
 
 
