@@ -58,7 +58,17 @@ async def handler(event):
 
         link = links[0]
 
-        msg = f"{duck_type}\n\n🔗 {link}"
+level = None
+
+level_match = re.search(r'\b([1-4])\b', text)
+
+if level_match:
+    level = level_match.group(1)
+
+if level:
+    msg = f"{duck_type}\n⭐ LEVEL {level}\n\n🔗 {link}"
+else:
+    msg = f"{duck_type}\n\n🔗 {link}"
 
         await client.send_message(
             TARGET_CHANNEL,
