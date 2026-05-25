@@ -26,19 +26,7 @@ async def handler(event):
 
     try:
 
-        # =========================
-        # ПОЛУЧАЕМ ТЕКСТ
-        # =========================
-
-        text = ""
-
-        if event.message.message:
-            text += event.message.message
-
-        if event.message.raw_text:
-            text += "\n" + event.message.raw_text
-
-        text = text.strip()
+        text = event.raw_text
 
         print("СООБЩЕНИЕ:", text)
 
@@ -47,30 +35,30 @@ async def handler(event):
 
         text_lower = text.lower()
 
-        # =========================
-        # ИЩЕМ ТИП УТКИ
-        # =========================
-
         duck_type = None
 
-        if re.search(r'rare', text_lower):
+        # =========================
+        # ИЩЕМ НАЗВАНИЕ УТКИ
+        # =========================
+
+        if "rare" in text_lower:
             duck_type = "🟢 RARE"
 
-        elif re.search(r'epic', text_lower):
+        elif "epic" in text_lower:
             duck_type = "🟣 EPIC"
 
-        elif re.search(r'legendary', text_lower):
+        elif "legendary" in text_lower:
             duck_type = "🟡 LEGENDARY"
 
-        elif re.search(r'unique', text_lower):
+        elif "unique" in text_lower:
             duck_type = "🔴 UNIQUE"
 
-        # если нет типа утки — пропускаем
+        # если нет названия — пропускаем
         if not duck_type:
             return
 
         # =========================
-        # ИЩЕМ ВСЕ ССЫЛКИ
+        # ИЩЕМ ССЫЛКИ
         # =========================
 
         links = re.findall(
@@ -79,23 +67,23 @@ async def handler(event):
         )
 
         if not links:
-            print("ССЫЛКИ НЕ НАЙДЕНЫ")
+            print("ССЫЛКА НЕ НАЙДЕНА")
             return
 
         # =========================
-        # СОБИРАЕМ ССЫЛКИ
+        # УДАЛЯЕМ ДУБЛИ
         # =========================
 
-        links_text = "\n".join(links)
+        links = list(dict.fromkeys(links))
+
+        # берём только первую ссылку
+        link = links[0]
 
         # =========================
         # СОБИРАЕМ СООБЩЕНИЕ
         # =========================
 
-        msg = (
-            f"{duck_type}\n\n"
-            f"🔗 {links_text}"
-        )
+        msg = f"{duck_type}\n\n🔗 {link}"
 
         # =========================
         # ОТПРАВЛЯЕМ
